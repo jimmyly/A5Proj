@@ -92,13 +92,21 @@ public class DBScan<T extends Clusterable<T>>{
         }
 
         //TODO: Implement the DBScan algorithm - currently the code returns a single cluster containing all points
-        Cluster<T> cluster = new Cluster<T>();
+        //C = 0
+        Cluster<T> cluster;
+        //for each point P in dataset D (D = points)
         for (final T p : points) {
+            //mark P as visited by labeling as NOISE or CLUSTERED
+            //if P is unvisited that is
             if (states.get(p) == State.UNVISITED) {
+                //mark P as visited = CLUSTERED since NOISE is checked for after and there is no visit state?
+                states.put(p, State.CLUSTERED);
                 List<T> neighborPts = regionQuery(p, points);
                 if (neighborPts.size() < getMinPts()) {
+                    //mark P as noise
                     states.put(p, State.NOISE);
                 } else {
+                    //C = next cluster
                     cluster = new Cluster<T>();
                     expandCluster(cluster, p, states, neighborPts, points);
                     clusters.add(cluster);
@@ -139,11 +147,13 @@ public class DBScan<T extends Clusterable<T>>{
                                      final List<T> neighborPts, final Collection<T> points) {
 
         //we added the point p to the cluster and also flagged it as clustered for you, to demonstrate how to do that
+        //add P to cluster C
         cluster.addPoint(p);
         states.put(p, State.CLUSTERED);
-
+        //for each point P' (P' = q) in NeighborPts
         for(final T q: neighborPts) {
             if(states.get(q) == State.UNVISITED) {
+                //mark as clustered since its visited, since there is no other state for VISITED?
                 states.put(q, State.CLUSTERED);
                 List<T> neighborPtsq = regionQuery(q, points);
                 if(neighborPtsq.size() >= getMinPts()) {

@@ -98,10 +98,10 @@ public class MapsActivity extends FragmentActivity {
 
 
         DBScan<GPSLocation> scan = new DBScan<GPSLocation>(10,10);
-        //wrapping GPSlocation to GPspt in order to compare each coordinate provided by GPSLocation
-    
+        //DBScan's cluster takes a Collection (e.g. ArrayList, not an Array)
         clusters = scan.cluster( Arrays.asList(locations));
-
+//after getting a list of clusters, we need to extract the list of clusters (clusters are privately ArrayLists)
+        //and convert each cluster into arrays so we can draw our hulls which take GPSLocation array
         for(Cluster<GPSLocation> c : clusters) {
             wrapper = c.getPoints().toArray(wrapper);
 
