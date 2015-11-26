@@ -78,8 +78,10 @@ public class MapsActivity extends FragmentActivity {
     	dao.openRead();
     	GPSLocation[] locations = dao.getAllLocations();
     	dao.close();
-
-        mMap.addMarker(new MarkerOptions().position(new LatLng(locations[0].latitude, locations[0].longitude)).title("Marker"));
+//marking points
+        for(GPSLocation gps : locations) {
+            mMap.addMarker(new MarkerOptions().position(new LatLng(gps.latitude, gps.longitude)).title("Marker"));
+        }
         //TODO:: Cluster all locations. Instead of the call below that draws a convex hull around all your points,
         // 				you will draw a polygon from each cluster identified by the DBScan algorithm
         drawHullFromPoints(locations);
