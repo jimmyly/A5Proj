@@ -2,6 +2,8 @@ package group6.umass.edu.location;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import android.support.v4.app.FragmentActivity;
 import com.google.android.gms.maps.GoogleMap;
@@ -11,6 +13,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 
+import DBScan.DBScan;
 import edu.umass.cs.client.R;
 import sql.GPSLocation;
 import sql.LocationDAO;
@@ -19,9 +22,9 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import DBScan.Cluster;
 
 import static edu.umass.cs.client.R.layout.activity_maps;
-
 
 public class MapsActivity extends FragmentActivity {
 	
@@ -76,19 +79,65 @@ public class MapsActivity extends FragmentActivity {
     	GPSLocation[] locations = dao.getAllLocations();
     	dao.close();
     	// adds the first point as a marker.
-    	mMap.addMarker(new MarkerOptions().position(new LatLng(locations[0].latitude, locations[0].longitude)).title("Marker"));
-    	//TODO:: Cluster all locations. Instead of the call below that draws a convex hull around all your points,
-    	// 				you will draw a polygon from each cluster identified by the DBScan algorithm
-    	drawHullFromPoints(locations);
+
+
+            for (GPSLocation gps : locations) {
+                mMap.addMarker(new MarkerOptions().position(new LatLng(gps.latitude, gps.longitude)).title("Marker"));
+                //TODO:: Cluster all locations. Instead of the call below that draws a convex hull around all your points,
+                // 				you will draw a polygon from each cluster identified by the DBScan algorithm
+                drawHullFromPoints(locations);
+            }
+
+
     	/***/
     }
-    private void drawHullFromPoints(GPSLocation[] locations){
-    	ArrayList<GPSLocation> hull = FastConvexHull.execute(locations);
+    private void drawHullFromPoints(GPSLocation[] locations) {
+        //list of clusters
+
+        GPSLocation[] wrapper = new GPSLocation[locations.length];
+        List<Cluster<GPSLocation>> clusters = new ArrayList<Cluster<GPSLocation>>();
+
+
+        DBScan<GPSLocation> scan = new DBScan<GPSLocation>(10,10);
+        //wrapping GPSlocation to GPspt in order to compare each coordinate provided by GPSLocation
+    
+        clusters = scan.cluster( Arrays.asList(locations));
+
+        for(Cluster<GPSLocation> c : clusters) {
+            wrapper = c.getPoints().toArray(wrapper);
+
+
+        ArrayList<GPSLocation> hull = FastConvexHull.execute(locations);
+            //wrapper = new GPSLocation[locations.length];
+        PolygonOptions options = new PolygonOptions();
+        for(GPSLocation loc : hull){
+            options.add(new LatLng(loc.latitude,loc.longitude));  
+        }
+        options = options.strokeColor(Color.RED).fillColor(Color.BLUE);
+        mMap.addPolygon(options); // draw a polygon
+
+    }
+
+
+
+
+        }
+
+        /*
+        *unwrapping each cluster in the list of clusters,
+        *then iterating through each unwrapped cluster (becomes type GPSLocation) and drawing the hulls of each cluster
+        */
+
+
+
+
+
+/*    	ArrayList<GPSLocation> hull = FastConvexHull.execute(locations);
     	PolygonOptions options = new PolygonOptions();
     	for(GPSLocation loc : hull){
-    		options.add(new LatLng(loc.latitude,loc.longitude));
+    		options.add(new LatLng(loc.latitude-0.04,loc.longitude-0.05));	
     	}
         options = options.strokeColor(Color.RED).fillColor(Color.BLUE);
     	mMap.addPolygon(options); // draw a polygon
-    }
-}
+    }*/
+} 
