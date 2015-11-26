@@ -270,6 +270,11 @@ public class Context_Service extends Service implements SensorEventListener, Mic
 					//instantiate the locationManager
 					locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+					locationDAO = new LocationDAO(Context_Service.this);
+					locationDAO.openWrite();
+					locationDAO.deleteAll();
+					locationDAO.close();
+
 
 
 					//get location updates
