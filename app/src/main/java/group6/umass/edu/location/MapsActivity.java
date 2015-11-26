@@ -78,14 +78,12 @@ public class MapsActivity extends FragmentActivity {
     	dao.openRead();
     	GPSLocation[] locations = dao.getAllLocations();
     	dao.close();
-    	// should add all markers, if its in the same location, itll replace it with a Market i+1 higher. In theory anyway.
 
-            for (int i = 0; i <locations.length; i++) {
-                mMap.addMarker(new MarkerOptions().position(new LatLng(locations[i].latitude, locations[i].longitude)).title("Marker" + i));
-                //TODO:: Cluster all locations. Instead of the call below that draws a convex hull around all your points,
-                // 				you will draw a polygon from each cluster identified by the DBScan algorithm
-                drawHullFromPoints(locations);
-            }
+        mMap.addMarker(new MarkerOptions().position(new LatLng(locations[0].latitude, locations[0].longitude)).title("Marker"));
+        //TODO:: Cluster all locations. Instead of the call below that draws a convex hull around all your points,
+        // 				you will draw a polygon from each cluster identified by the DBScan algorithm
+        drawHullFromPoints(locations);
+
 
 
     	/***/

@@ -99,8 +99,8 @@ public class DBScan<T extends Clusterable<T>>{
             //mark P as visited by labeling as NOISE or CLUSTERED
             //if P is unvisited that is
             if (states.get(p) == State.UNVISITED) {
-                //mark P as visited = CLUSTERED since NOISE is checked for after and there is no visit state?
-                states.put(p, State.CLUSTERED);
+                //mark P as visited = NOISE since its not clustered, but visited
+                states.put(p, State.NOISE);
                 List<T> neighborPts = regionQuery(p, points);
                 if (neighborPts.size() < getMinPts()) {
                     //mark P as noise
@@ -153,8 +153,8 @@ public class DBScan<T extends Clusterable<T>>{
         //for each point P' (P' = q) in NeighborPts
         for(final T q: neighborPts) {
             if(states.get(q) == State.UNVISITED) {
-                //mark as clustered since its visited, since there is no other state for VISITED?
-                states.put(q, State.CLUSTERED);
+                //mark as NOISE since its not part of a Cluster, but is visited
+                states.put(q, State.NOISE);
                 List<T> neighborPtsq = regionQuery(q, points);
                 if(neighborPtsq.size() >= getMinPts()) {
         //uses existing 
