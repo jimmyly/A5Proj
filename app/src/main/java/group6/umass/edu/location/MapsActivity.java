@@ -93,17 +93,18 @@ public class MapsActivity extends FragmentActivity {
     private void drawHullFromPoints(GPSLocation[] locations) {
         //list of clusters
 
-        GPSLocation[] wrapper = new GPSLocation[locations.length];
+        //GPSLocation[] wrapper = new GPSLocation[locations.length];
         List<Cluster<GPSLocation>> clusters = new ArrayList<Cluster<GPSLocation>>();
 
 
-        DBScan<GPSLocation> scan = new DBScan<GPSLocation>(10,10);
+        DBScan<GPSLocation> scan = new DBScan<GPSLocation>(5.0,5);
         //DBScan's cluster takes a Collection (e.g. ArrayList, not an Array)
+
         clusters = scan.cluster( Arrays.asList(locations));
 //after getting a list of clusters, we need to extract the list of clusters (clusters are privately ArrayLists)
         //and convert each cluster into arrays so we can draw our hulls which take GPSLocation array
         for(Cluster<GPSLocation> c : clusters) {
-            wrapper = c.getPoints().toArray(wrapper);
+           GPSLocation[] wrapper = c.getPoints().toArray(new GPSLocation[c.size()]);
 
 //oops I was using all locations, should work now!
         ArrayList<GPSLocation> hull = FastConvexHull.execute(wrapper);
