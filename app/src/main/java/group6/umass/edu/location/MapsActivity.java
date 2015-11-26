@@ -105,8 +105,8 @@ public class MapsActivity extends FragmentActivity {
         for(Cluster<GPSLocation> c : clusters) {
             wrapper = c.getPoints().toArray(wrapper);
 
-
-        ArrayList<GPSLocation> hull = FastConvexHull.execute(locations);
+//oops I was using all locations, should work now!
+        ArrayList<GPSLocation> hull = FastConvexHull.execute(wrapper);
             //wrapper = new GPSLocation[locations.length];
         PolygonOptions options = new PolygonOptions();
         for(GPSLocation loc : hull){
