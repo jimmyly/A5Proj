@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">My Activities</string>
+    <!-- Strings shown in UI  -->
+    <string name="status">Status</string>
+    <string name="accel">Accelerometer</string>
+    <string name="steps">Steps</string>
+    <string name="activity">Activity</string>
+    <string name="nullvalue">&#8212;.&#8212;&#8212;</string>
+    <string name="x">X</string>
+    <string name="y">Y</string>
+    <string name="z">Z</string>
+    <string name="visualize_text_view">Visualize</string>
+    <string name="speech_status_label">Speech Status</string>
+    <string name="title_activity_maps">Map</string>
+</resources>
