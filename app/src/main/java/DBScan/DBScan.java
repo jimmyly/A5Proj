@@ -97,7 +97,6 @@ public class DBScan<T extends Clusterable<T>>{
         //for each point P in dataset D (D = points)
         for (final T p : points) {
             //mark P as visited by labeling as NOISE or CLUSTERED
-            //if P is unvisited that is
             if (states.get(p) == State.UNVISITED) {
                 //mark P as visited = NOISE since its not clustered, but visited
                 states.put(p, State.NOISE);
@@ -108,7 +107,9 @@ public class DBScan<T extends Clusterable<T>>{
                 } else {
                     //C = next cluster
                     cluster = new Cluster<T>();
+                    //followed faithfully to the perimeters of each method header
                     expandCluster(cluster, p, states, neighborPts, points);
+                    //when expandCluster is done executing, we add it to the list of clusters
                     clusters.add(cluster);
 
                 }
@@ -155,6 +156,7 @@ public class DBScan<T extends Clusterable<T>>{
             if(states.get(q) == State.UNVISITED) {
                 //mark as NOISE since its not part of a Cluster, but is visited
                 states.put(q, State.NOISE);
+                //NeighborPts' = NeighborPtsq
                 List<T> neighborPtsq = regionQuery(q, points);
                 if(neighborPtsq.size() >= getMinPts()) {
         //uses existing 
