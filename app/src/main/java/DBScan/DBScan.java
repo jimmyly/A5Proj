@@ -1,7 +1,6 @@
 package DBScan;
 
 import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -93,14 +92,14 @@ public class DBScan<T extends Clusterable<T>>{
 
         //TODO: Implement the DBScan algorithm - currently the code returns a single cluster containing all points
         //C = 0
-        Cluster<T> cluster;
+        Cluster<T> cluster = new Cluster<T>();
         //for each point P in dataset D (D = points)
         for (final T p : points) {
             //mark P as visited by labeling as NOISE or CLUSTERED
             if (states.get(p) == State.UNVISITED) {
                 //mark P as visited = NOISE since its not clustered, but visited
                 states.put(p, State.NOISE);
-                List<T> neighborPts = regionQuery(p, points);
+               final List<T> neighborPts = regionQuery(p, points);
                 if (neighborPts.size() < getMinPts()) {
                     //mark P as noise
                     states.put(p, State.NOISE);
@@ -160,7 +159,7 @@ public class DBScan<T extends Clusterable<T>>{
                 List<T> neighborPtsq = regionQuery(q, points);
                 if(neighborPtsq.size() >= getMinPts()) {
         //uses existing 
-                  addAsSet(neighborPts, neighborPtsq);
+                  addAsSet(neighborPtsq, neighborPts);
                 }
                 if(states.get(q) != State.CLUSTERED) {
                     cluster.addPoint(q);
@@ -181,7 +180,7 @@ public class DBScan<T extends Clusterable<T>>{
      */
     private List<T> regionQuery(final T p, final Collection<T> points) {
         //TODO: Query the region around point p to get its neighbors, that is all points within eps of p
-        final List<T> neighbors = new ArrayList<T>();
+        List<T> neighbors = new ArrayList<T>();
 
         //figuring out how to determine "regions?" guessing using a distance function between principal and neighbor
         for(T p2: points) {

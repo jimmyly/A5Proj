@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
 import android.support.v4.app.FragmentActivity;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -27,7 +28,7 @@ import DBScan.Cluster;
 import static edu.umass.cs.client.R.layout.activity_maps;
 
 public class MapsActivity extends FragmentActivity {
-	
+
 	private static final String TAG = "MapActivity";
     
     /**
@@ -78,18 +79,23 @@ public class MapsActivity extends FragmentActivity {
     	dao.openRead();
     	GPSLocation[] locations = dao.getAllLocations();
     	dao.close();
-//marking points
-        for(GPSLocation gps : locations) {
-            mMap.addMarker(new MarkerOptions().position(new LatLng(gps.latitude, gps.longitude)).title("Marker"));
-        }
-        //TODO:: Cluster all locations. Instead of the call below that draws a convex hull around all your points,
-        // 				you will draw a polygon from each cluster identified by the DBScan algorithm
-        drawHullFromPoints(locations);
 
+
+
+//marking points
+
+
+            for (GPSLocation gps : locations) {
+                mMap.addMarker(new MarkerOptions().position(new LatLng(gps.latitude, gps.longitude)).title("Marker"));
+            }
+            //TODO:: Cluster all locations. Instead of the call below that draws a convex hull around all your points,
+            // 				you will draw a polygon from each cluster identified by the DBScan algorithm
+            drawHullFromPoints(locations);
+        }
 
 
     	/***/
-    }
+
     private void drawHullFromPoints(GPSLocation[] locations) {
         //list of clusters
 
@@ -104,10 +110,10 @@ public class MapsActivity extends FragmentActivity {
 //after getting a list of clusters, we need to extract the list of clusters (clusters are privately ArrayLists)
         //and convert each cluster into arrays so we can draw our hulls which take GPSLocation array
         for(Cluster<GPSLocation> c : clusters) {
-           GPSLocation[] wrapper = c.getPoints().toArray(new GPSLocation[c.size()]);
+           locations = c.getPoints().toArray(new GPSLocation[c.size()]);
 
 //oops I was using all locations, should work now!
-        ArrayList<GPSLocation> hull = FastConvexHull.execute(wrapper);
+        ArrayList<GPSLocation> hull = FastConvexHull.execute(locations);
             //wrapper = new GPSLocation[locations.length];
         PolygonOptions options = new PolygonOptions();
         for(GPSLocation loc : hull){
